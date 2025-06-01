@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sri-test-app
+  labels:
+    app:
+
+spec:
+  replicas:1
+  selector:
+    matchLabels:
+      app: sri-test-app
+  template:
+    metadata:
+      labels:
+        app: sri-test-app
+    spec:
+      containers:
+      - name: sri-test-app
+        image: REPOSITORY_TAG
+        resources:
+          requests:
+            memory: 50Mi
+            cpu: 250m
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sri-test-app
+
+spec:
+  selector:
+    app: sri-test-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  
+  type: ClusterIP
