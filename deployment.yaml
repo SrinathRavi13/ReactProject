@@ -4,7 +4,6 @@ metadata:
   name: sri-test-react-app
   labels:
     app: sri-test-react-app
-
 spec:
   replicas: 1
   selector:
@@ -18,7 +17,9 @@ spec:
       containers:
         - name: sri-test-react-app
           image: REPOSITORY_TAG
+          imagePullPolicy: Always
           resources:
-          requests:
-            memory: 50Mi
-            cpu: 250m
+            requests:
+              memory: "50Mi"
+              cpu: "250m"
+        
