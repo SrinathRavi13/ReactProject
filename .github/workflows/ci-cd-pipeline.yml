@@ -26,7 +26,7 @@ jobs:
       with:
         registry: ${{ secrets.AWS_ECR }}
         username: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        password: ${{ secrets.ECR_PASSWORD }}
+        password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       env:
         aws-region: ${{ secrets.AWS_REGION }}
 
