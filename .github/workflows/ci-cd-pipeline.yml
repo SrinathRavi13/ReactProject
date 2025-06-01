@@ -47,10 +47,10 @@ jobs:
     steps:
     - name: Install kubectl
       run: |
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/OS_DISTRIBUTION/amd64/kubectl
+        curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.15/2025-04-17/bin/linux/amd64/kubectl
         chmod +x ./kubectl
-        sudo mv ./kubectl /usr/local/bin/kubectl
-        echo "kubectl version --client"
+        mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+        kubectl version --client
 
   deployToEKS:
     runs-on: ubuntu-latest
