@@ -6,7 +6,7 @@ spec:
   selector:
     app: sri-test-react-app
   ports:
-    - name: http
+    - protocol: TCP
       port: 80
       targetPort: 8080
-  type: ClusterIP
+  type: LoadBalancer

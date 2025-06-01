@@ -17,6 +17,9 @@ spec:
       containers:
         - name: sri-test-react-app
           image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/sri-test-react-app:$GITHUB_SHA
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
           resources:
             requests:
               memory: "50Mi"
