@@ -34,7 +34,7 @@ jobs:
       env:
         REGISTRY: ${{ secrets.AWS_ECR }}
         IMAGE_NAME: sri-test-react-app
-        REPOSITORY_TAG: ${REGISTRY}/${REPO}:${GITHUB_SHA}
+        REPOSITORY_TAG: ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA}
         
       run: |
         docker build -t ${IMAGE_NAME} .
