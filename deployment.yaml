@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sri-test-app
+  name: sri-test-react-app
   labels:
-    app:
+    app: sri-test-react-app
 
 spec:
   replicas:1
   selector:
     matchLabels:
-      app: sri-test-app
+      app: sri-test-react-app
   template:
     metadata:
       labels:
-        app: sri-test-app
+        app: sri-test-react-app
     spec:
       containers:
-      - name: sri-test-app
+      - name: sri-test-react-app
         image: REPOSITORY_TAG
         resources:
           requests:
@@ -27,11 +27,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sri-test-app
+  name: sri-test-react-app
 
 spec:
   selector:
-    app: sri-test-app
+    app: sri-test-react-app
   ports:
     - name: http
       port: 80
