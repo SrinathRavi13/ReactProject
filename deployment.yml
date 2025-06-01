@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: sri-test-react-app
-          image: REPOSITORY_TAG
+          image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/sri-test-react-app:1
           resources:
             requests:
               memory: 50Mi
