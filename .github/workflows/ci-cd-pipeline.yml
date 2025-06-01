@@ -1,4 +1,4 @@
-name: Deploy react app to EKS
+name: Deploy react app to EKS cluster
 on:
   push:
     branches: [ "main" ]
