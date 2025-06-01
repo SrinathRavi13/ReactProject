@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sri-test-react-app
-  labels:
-    app: sri-test-react-app
 spec:
   replicas: 1
   selector:
@@ -17,9 +15,6 @@ spec:
       containers:
         - name: sri-test-react-app
           image: REPOSITORY_TAG
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
           resources:
             requests:
               memory: "50Mi"
