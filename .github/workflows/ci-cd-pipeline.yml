@@ -66,11 +66,8 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
       
     - name: Download kubeconfig file
-      env:
-        KUBECONFIG: ${{ runner.temp }}/kubeconfig
       run: |
-        aws eks update-kubeconfig --name sri-test-react-app --region ${{ secrets.AWS_REGION }} --kubeconfig $KUBECONFIG
-        echo "Kubeconfig=$KUBECONFIG" >> $GITHUB_ENV
+        aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
         echo "Kubeconfig file downloaded successfully."
 
     - name: Deploy to EKS
