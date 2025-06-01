@@ -13,9 +13,9 @@ spec:
         app: sri-test-react-app
     spec:
       containers:
-      - name: sri-test-react-app
-        image: REPOSITORY_TAG
-        resources:
-          requests:
-            memory: "50Mi"
-            cpu: "250m"
+        - name: sri-test-react-app
+          image: REPOSITORY_TAG
+          resources:
+            requests:
+              memory: 50Mi
+              cpu: 0.2
