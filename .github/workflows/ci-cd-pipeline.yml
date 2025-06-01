@@ -32,7 +32,7 @@ jobs:
 
     - name: Build Docker image
       env:
-        REGISTRY: ${{ secrets.AWS_ECR }}
+        REGISTRY: 456840671316.dkr.ecr.us-east-1.amazonaws.com
         REPO: sri-test-react-app
         REPOSITORY_TAG: ${REGISTRY}/${REPO}:1
         
