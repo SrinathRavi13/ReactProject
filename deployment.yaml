@@ -17,24 +17,8 @@ spec:
     spec:
       containers:
         - name: sri-test-react-app
-          image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/sri-test-react-app:${GITHUB_SHA}
+          image: REPOSITORY_TAG
           resources:
           requests:
             memory: 50Mi
             cpu: 250m
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: sri-test-react-app
-
-spec:
-  selector:
-    app: sri-test-react-app
-  ports:
-    - name: http
-      port: 80
-      targetPort: 8080
-  
-  type: ClusterIP
