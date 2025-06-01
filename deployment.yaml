@@ -3,20 +3,19 @@ kind: Deployment
 metadata:
   name: sri-test-react-app
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: sri-test-react-app
+  replicas: 1
   template:
     metadata:
       labels:
         app: sri-test-react-app
     spec:
       containers:
-        - name: sri-test-react-app
-          image: REPOSITORY_TAG
-          resources:
-            requests:
-              memory: "50Mi"
-              cpu: "250m"
-        
+      - name: sri-test-react-app
+        image: REPOSITORY_TAG
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "250m"
