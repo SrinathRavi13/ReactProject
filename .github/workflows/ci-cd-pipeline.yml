@@ -37,7 +37,7 @@ jobs:
         REPOSITORY_TAG: ${REGISTRY}/${REPO}:${GITHUB_SHA}
         
       run: |
-        docker build -t ${IMAGE_NAME} .
+        docker build -t ${REPO} .
         docker tag ${REPO}:latest ${REGISTRY}/${REPO}:${GITHUB_SHA}
         docker push ${REGISTRY}/${REPO}:${GITHUB_SHA}
 
