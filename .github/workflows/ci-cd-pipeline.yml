@@ -87,12 +87,18 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }} --kubeconfig $KUBECONFIG
         echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_ENV
-        
+    - name: Verify kubectl configuration
+      env:
+        KUBECONFIG: ${{ runner.temp }}/kubeconfig
+      run: |
+        kubectl get nodes
+
     - name: Deploy to EKS
-        
+      env:
+        KUBECONFIG: ${{ runner.temp }}/kubeconfig
       run: |
         sed -i "s|image: REPOSITORY_TAG|image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/react-app-test:$GITHUB_RUN_NUMBER|g" ./deploy.yaml
-        kubectl apply -f ./deploy.yaml 
+        kubectl apply -f ./deploy.yaml --validate=false
 
     needs:
       install_Kubectl
