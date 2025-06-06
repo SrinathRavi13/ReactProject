@@ -1,71 +1,100 @@
-name: Deploy react app to EKS cluster
-on:
-  push:
-    branches: [ "main" ]
+name: Deploy to EKS
+
+on: push
+    
 
 jobs:
-# This job Installs kubectl, which is required to interact with the EKS cluster
-
-  install_Kubectl:
+  loginToAWS:
     runs-on: ubuntu-latest
-    steps:
-    - name: Install kubectl
-      run: |
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/OS_DISTRIBUTION/amd64/kubectl
-        chmod +x ./kubectl
-        sudo mv ./kubectl /usr/local/bin/kubectl
 
-# This job builds the Docker image and pushes it to AWS ECR
-
-  buildAndPushDockerImage:
-    runs-on: ubuntu-latest
-    needs: install_Kubectl
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Log in to AWS ECR
-      uses: docker/login-action@v3
-      with:
-        registry: 456840671316.dkr.ecr.us-east-1.amazonaws.com
-        username: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      env:
-        aws-region: ${{ secrets.AWS_REGION }}
-
-    - name: Build Docker image
-      env:
-        REGISTRY: 456840671316.dkr.ecr.us-east-1.amazonaws.com
-        REPO: react-app-test
-        REPOSITORY_TAG: ${REGISTRY}/${REPO}:${GITHUB_RUN_NUMBER}
-        
-      run: |
-        docker build -t ${REPO} .
-        docker tag ${REPO}:latest ${REGISTRY}/${REPO}:${GITHUB_RUN_NUMBER}
-        docker push ${REGISTRY}/${REPO}:${GITHUB_RUN_NUMBER}
-    
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Configure AWS Credentials
+    - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Download kubeconfig file
+        
+  buildImage-and-Push-to-ECR:
+     runs-on: ubuntu-latest
+     needs:
+       loginToAWS
+         
+     steps:
+
+     - name: Code Checkout
+       uses: actions/checkout@v4
+
+     - name: Login to AWSECR
+       uses: docker/login-action@v3
+       with:
+         registry: 456840671316.dkr.ecr.us-east-1.amazonaws.com
+         username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+       env:
+         aws-region: ${{ secrets.AWS_REGION }}
+
+     - name: Build Image
+       env:
+         REGISTRY: 456840671316.dkr.ecr.us-east-1.amazonaws.com
+         REPO: react-app-test
+         REPOSITORY_TAG: ${REGISTRY}/${REPO}:${GITHUB_RUN_NUMBER}
+        
+       run: | 
+         docker build -t merchant_api .
+         docker tag ${REPO}:latest ${REGISTRY}/${REPO}:$GITHUB_RUN_NUMBER
+         docker push ${REGISTRY}/${REPO}:$GITHUB_RUN_NUMBER
+
+         
+  install_Kubectl:
+    runs-on: ubuntu-latest
+
+    steps:
+        
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        sudo mv kubectl /usr/local/bin/
+
+    needs:
+      buildImage-and-Push-to-ECR
+      
+#--------------->
+
+  deployToCluster:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Configure kubectl
       env:
         KUBECONFIG: ${{ runner.temp }}/kubeconfig
       run: |
         aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }} --kubeconfig $KUBECONFIG
-        echo "Kubeconfig=$KUBECONFIG" >> $GITHUB_ENV
-        echo "Kubeconfig file downloaded successfully."
-        echo "Kubeconfig path: $KUBECONFIG"
-
-    # This job deploys the application to the EKS cluster
+        echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_ENV
+        
     - name: Deploy to EKS
+        
       run: |
-        sed -i "s|image: REPOSITORY_TAG|image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/react-app-test:$GITHUB_RUN_NUMBER|g" ./deploy.yaml
-        kubectl apply -f ./deploy.yaml
-        kubectl apply -f ./service.yaml
+        sed -i "s|image: REPOSITORY_TAG|image: 765176032689.dkr.ecr.eu-west-1.amazonaws.com/merchant_api:$GITHUB_RUN_NUMBER|g" ./deploy.yaml
+        kubectl apply -f ./deploy.yaml 
+
+    needs:
+      install_Kubectl
+
+    
