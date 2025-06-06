@@ -68,7 +68,7 @@ jobs:
     
      - name: Verify kubectl installation
        run: |
-        kubectl version --client
+        kubectl version --short --client
         kubectl get nodes
 
      - name: Deploy to EKS
