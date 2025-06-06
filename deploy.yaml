@@ -15,9 +15,6 @@ spec:
       containers:
         - name: react-app-test
           image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/react-app-test:1.1
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
           resources:
             requests:
               memory: 50Mi
