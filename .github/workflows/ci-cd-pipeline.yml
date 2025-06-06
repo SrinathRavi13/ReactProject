@@ -68,6 +68,7 @@ jobs:
       run: |
         sed -i "s|image: REPOSITORY_TAG|image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/react-app-test:$GITHUB_RUN_NUMBER|g" ./deploy.yaml
         echo "REPOSITORY_TAG replaced with 456840671316.dkr.ecr.us-east-1.amazonaws.com/react-app-test:$GITHUB_RUN_NUMBER in deploy.yaml
+        kubectl config get-clusters
         kubectl config current-context
         kubectl get nodes
         kubectl --kubeconfig=$KUBECONFIG apply -f ./deploy.yaml
