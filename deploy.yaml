@@ -3,10 +3,10 @@ kind: Deployment
 metadata:
   name: react-app-test
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: react-app-test
-  replicas: 1
   template:
     metadata:
       labels:
@@ -14,24 +14,6 @@ spec:
     spec:
       containers:
         - name: react-app-test
-          image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/react-app-test:latest
-          resources:
-            requests:
-              memory: 50Mi
-              cpu: 0.25
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: react-app-test-svc
-
-spec:
-  selector:
-    app: react-app-test
-
-  ports:
-    - name: http
-      port: 80
-
-  type: ClusterIP
+          image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/react-app-test:1.1
+          ports:
+            - containerPort: 80

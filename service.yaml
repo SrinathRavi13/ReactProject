@@ -6,6 +6,7 @@ spec:
   selector:
     app: react-app-test
   ports:
-    - name: http
+    - protocol: TCP
       port: 80
-  type: ClusterIP
+      targetPort: 80
+  type: LoadBalancer
