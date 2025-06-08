@@ -15,7 +15,5 @@ spec:
       containers:
         - name: react-app-test
           image: 456840671316.dkr.ecr.us-east-1.amazonaws.com/react-app-test:1.1
-          resources:
-            requests:
-              memory: 50Mi
-              cpu: 0.25
+          ports:
+            - containerPort: 80
